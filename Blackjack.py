@@ -42,5 +42,38 @@ class Hand:
         if self.aces>0 and self.value>21:
             self.value-=10
 
+class Chips:
+    def __init__(self):
+        self.total = 100
+        self.bet = 0
+    def win_bet(self):
+        self.total += self.bet
+    def lose_bet(self):
+        self.total -= self.bet
+
+def take_bet():
+    while True:
+        try:
+            bet = int(input('How much would you like to bet?'))
+        except:
+            print('Please enter an integer')
+            continue
+        else:
+            if bet > Chips.total:
+                print('Bet exceeds chips available, please enter a new bet')
+                continue
+            else:
+                print(f'You have placed a bet of ${bet}')
+                break
+
+def hit(deck,hand):
+    random_card = test_deck[random.randint(1,len(test_deck))]
+    player_hand.add_card(random_card)
+    test_deck.remove(random_card)
+    if player_hand.value > 21:
+        player_hand.adjust_for_ace()
+
+
 test_deck = Deck()
+player_hand = Hand()
 print(test_deck)
