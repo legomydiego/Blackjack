@@ -73,7 +73,24 @@ def hit(deck,hand):
     if player_hand.value > 21:
         player_hand.adjust_for_ace()
 
+def hit_or_stand(deck,hand):
+    global playing = True
+    decision = input('Would you like to hit or stand?')
+    if decision == 'hit':
+        hit()
+    elif decision == 'stand':
+        playing = False
+
+def show_some(player,dealer):
+    for card in player_hand:
+        print(card)
+
+def show_all(player,dealer):
+    for card in dealer_hand:
+        print(card)
+    
 
 test_deck = Deck()
 player_hand = Hand()
+dealer_hand = Hand()
 print(test_deck)
