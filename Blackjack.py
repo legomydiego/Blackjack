@@ -81,16 +81,37 @@ def hit_or_stand(deck,hand):
     elif decision == 'stand':
         playing = False
 
-def show_some(player,dealer):
+def show_some(player_hand,dealer_hand):
     for card in player_hand:
         print(card)
 
-def show_all(player,dealer):
+def show_all(player_hand,dealer_hand):
     for card in dealer_hand:
         print(card)
-    
+
+def player_busts(player_hand,chips):
+    print('Player busts, bet lost')
+    chips.lose_bet()
+
+def player_wins(player_hand,chips):
+    print('Player wins this round!')
+    chips.win_bet()
+    chips.win_bet()
+
+def dealer_busts(dealer_hand):
+    pass
+
+def dealer_wins(dealer_hand):
+    pass
+
+def push(player_hand,dealer_hand,chips):
+    print('Its a tie, bet returned to your stack')
+    chips.win_bet()
+
+
 
 test_deck = Deck()
 player_hand = Hand()
 dealer_hand = Hand()
+chips = Chips()
 print(test_deck)
