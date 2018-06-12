@@ -67,7 +67,7 @@ def take_bet():
                 break
 
 def hit(deck,hand):
-    random_card = test_deck[random.randint(1,len(test_deck))]
+    random_card = test_deck[random.randint(1,len(shuffled_deck))]
     player_hand.add_card(random_card)
     test_deck.remove(random_card)
     if player_hand.value > 21:
@@ -82,10 +82,20 @@ def hit_or_stand(deck,hand):
         playing = False
 
 def show_some(player_hand,dealer_hand):
+    print('Player Cards')
     for card in player_hand:
         print(card)
+    print('Dealer Cards')
+    i = 0
+    while(i<len(dealer_hand)-1):
+        print(card)
+        i+=1
 
 def show_all(player_hand,dealer_hand):
+    print('Player Cards')
+    for card in player_hand:
+        print(card)
+    print('Dealer Cards')
     for card in dealer_hand:
         print(card)
 
@@ -108,10 +118,31 @@ def push(player_hand,dealer_hand,chips):
     print('Its a tie, bet returned to your stack')
     chips.win_bet()
 
+while True:
+    print('Welcome to BLACKJACK!!!')
+    chips = Chips()
+    shuffled_deck = Deck()
+    shuffled_deck.shuffle()
+    player_hand = Hand()
+    player_hand.add_card()
+    player_hand.add_card()
+    dealer_hand = Hand()
+    dealer_hand.add_card()
+    dealer_hand.add_card()
+    take_bet()
+    show_some(player_hand,dealer_hand)
+    while playing:
+        hit_or_stand()
+        show_some(player_hand,dealer_hand)
+        if player_hand.value > 21:
+            player_busts()
+            break
+        else:
+            while dealer_hand.value < 17:
+                dealer_hand.add_card()
+            show_all()
+            #winning scenarios
 
 
-test_deck = Deck()
-player_hand = Hand()
-dealer_hand = Hand()
-chips = Chips()
+
 print(test_deck)
