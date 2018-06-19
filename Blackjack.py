@@ -25,7 +25,8 @@ class Deck:
     def shuffle(self):
         random.shuffle(self.deck)
     def deal(self):
-        pass
+        single_card = self.deck.pop()
+        return single_card
 
 class Hand:
     def __init__(self):
@@ -33,14 +34,14 @@ class Hand:
         self.value = 0
         self.aces = 0
     def add_card(self,card):
-        self.card = card
-        self.cards.append(self.card)
-        self.value += values[self.card.rank]
-        if self.card.rank == 'Ace':
+        self.cards.append(card)
+        self.value += values[card.rank]
+        if card.rank == 'Ace':
             self.aces+=1
     def adjust_for_ace(self):
-        if self.aces>0 and self.value>21:
+        while self.aces>0 and self.value>21:
             self.value-=10
+            self.aces-=1
 
 class Chips:
     def __init__(self):
@@ -51,35 +52,37 @@ class Chips:
     def lose_bet(self):
         self.total -= self.bet
 
-def take_bet():
+def take_bet(chips):
     while True:
         try:
-            bet = int(input('How much would you like to bet?'))
+            chips.bet = int(input('How much would you like to bet?'))
         except:
             print('Please enter an integer')
-            continue
         else:
-            if bet > Chips.total:
-                print('Bet exceeds chips available, please enter a new bet')
-                continue
+            if chips.bet > chips.total:
+                print(f'Bet exceeds balance, you have {chips.total} chips available, please enter a new bet')
             else:
-                print(f'You have placed a bet of ${bet}')
+                print(f'You have placed a bet of ${chips.bet}')
                 break
 
 def hit(deck,hand):
-    random_card = test_deck[random.randint(1,len(shuffled_deck))]
+    random_card = deck.deal()
     player_hand.add_card(random_card)
-    test_deck.remove(random_card)
-    if player_hand.value > 21:
-        player_hand.adjust_for_ace()
+    player_hand.adjust_for_ace()
 
 def hit_or_stand(deck,hand):
     global playing = True
-    decision = input('Would you like to hit or stand?')
-    if decision == 'hit':
-        hit()
-    elif decision == 'stand':
-        playing = False
+
+    while True:
+        decision = input('Would you like to hit or stand? Please enter h or s.')
+        if decision == 'h':
+            hit(deck,hand)
+        elif decision == 's':
+            print('Player stands, turn for the dealer')
+            playing = False
+        else:
+            print('Sorry, not a valid entry. Please enter h or s')
+        break
 
 def show_some(player_hand,dealer_hand):
     print('Player Cards')
