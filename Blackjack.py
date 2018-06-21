@@ -71,8 +71,6 @@ def hit(deck,hand):
     player_hand.adjust_for_ace()
 
 def hit_or_stand(deck,hand):
-    global playing = True
-
     while True:
         decision = input('Would you like to hit or stand? Please enter h or s.')
         if decision == 'h':
@@ -109,13 +107,14 @@ def player_busts(player_hand,chips):
 def player_wins(player_hand,chips):
     print('Player wins this round!')
     chips.win_bet()
-    chips.win_bet()
 
 def dealer_busts(dealer_hand):
-    pass
+    print('Dealer busts, Player wins this round!')
+    chips.win_bet()
 
 def dealer_wins(dealer_hand):
-    pass
+    print('Player busts, bet lost')
+    chips.lose_bet()
 
 def push(player_hand,dealer_hand,chips):
     print('Its a tie, bet returned to your stack')
@@ -127,18 +126,18 @@ while True:
     shuffled_deck = Deck()
     shuffled_deck.shuffle()
     player_hand = Hand()
-    player_hand.add_card()
-    player_hand.add_card()
+    player_hand.add_card(shuffled_deck.deal())
+    player_hand.add_card(shuffled_deck.deal())
     dealer_hand = Hand()
-    dealer_hand.add_card()
-    dealer_hand.add_card()
-    take_bet()
+    dealer_hand.add_card(shuffled_deck.deal())
+    dealer_hand.add_card(shuffled_deck.deal())
+    take_bet(chips)
     show_some(player_hand,dealer_hand)
     while playing:
-        hit_or_stand()
+        hit_or_stand(shuffled_deck, player_hand)
         show_some(player_hand,dealer_hand)
         if player_hand.value > 21:
-            player_busts()
+            player_busts(dealer_hand)
             break
         else:
             while dealer_hand.value < 17:
