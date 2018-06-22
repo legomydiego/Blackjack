@@ -84,20 +84,20 @@ def hit_or_stand(deck,hand):
 
 def show_some(player_hand,dealer_hand):
     print('Player Cards')
-    for card in player_hand:
+    for card in player_hand.cards:
         print(card)
     print('Dealer Cards')
     i = 0
-    while(i<len(dealer_hand)-1):
-        print(card)
+    while(i<len(dealer_hand.cards)-1):
+        print(dealer_hand.cards[i])
         i+=1
 
 def show_all(player_hand,dealer_hand):
     print('Player Cards')
-    for card in player_hand:
+    for card in player_hand.cards:
         print(card)
     print('Dealer Cards')
-    for card in dealer_hand:
+    for card in dealer_hand.cards:
         print(card)
 
 def player_busts(player_hand,chips):
@@ -123,28 +123,46 @@ def push(player_hand,dealer_hand,chips):
 while True:
     print('Welcome to BLACKJACK!!!')
     chips = Chips()
+    #Setup deck
     shuffled_deck = Deck()
     shuffled_deck.shuffle()
+    #setup player
     player_hand = Hand()
     player_hand.add_card(shuffled_deck.deal())
     player_hand.add_card(shuffled_deck.deal())
+    #setup dealer
     dealer_hand = Hand()
     dealer_hand.add_card(shuffled_deck.deal())
     dealer_hand.add_card(shuffled_deck.deal())
+    
     take_bet(chips)
     show_some(player_hand,dealer_hand)
     while playing:
         hit_or_stand(shuffled_deck, player_hand)
         show_some(player_hand,dealer_hand)
         if player_hand.value > 21:
-            player_busts(dealer_hand)
+            player_busts(dealer_hand,chips)
             break
-        else:
-            while dealer_hand.value < 17:
-                dealer_hand.add_card()
-            show_all()
-            #winning scenarios
 
+    while dealer_hand.value < player_hand.value:
+        hit(shuffled_deck,dealer_hand)
+    
+    show_all(player_hand,dealer_hand)
+    
+    #winning scenarios
+    if dealer_hand.value > 21:
+        dealer_busts(dealer_hand)
+    elif dealer_hand.value > player_hand.value:
+        dealer_wins(dealer_hand)
+    else:
+        push(player_hand,dealer_hand,chips)
 
+    print(f'You have {chips} chips')
 
-print(test_deck)
+    new_game = input('would you like to play another game?')
+    if new_game[0].lower == 'y':
+        playing = True
+        continue
+    else:
+        print('Thanks for playing')
+        break
