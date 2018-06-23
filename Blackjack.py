@@ -67,11 +67,12 @@ def take_bet(chips):
 
 def hit(deck,hand):
     random_card = deck.deal()
-    player_hand.add_card(random_card)
-    player_hand.adjust_for_ace()
+    hand.add_card(random_card)
+    hand.adjust_for_ace()
 
 def hit_or_stand(deck,hand):
-    while True:
+    global playing
+    while playing:
         decision = input('Would you like to hit or stand? Please enter h or s.')
         if decision == 'h':
             hit(deck,hand)
@@ -83,14 +84,11 @@ def hit_or_stand(deck,hand):
         break
 
 def show_some(player_hand,dealer_hand):
+    print('Dealer Cards')
+    print(dealer_hand.cards[1])
     print('Player Cards')
     for card in player_hand.cards:
         print(card)
-    print('Dealer Cards')
-    i = 0
-    while(i<len(dealer_hand.cards)-1):
-        print(dealer_hand.cards[i])
-        i+=1
 
 def show_all(player_hand,dealer_hand):
     print('Player Cards')
@@ -118,7 +116,6 @@ def dealer_wins(dealer_hand):
 
 def push(player_hand,dealer_hand,chips):
     print('Its a tie, bet returned to your stack')
-    chips.win_bet()
 
 while True:
     print('Welcome to BLACKJACK!!!')
@@ -144,20 +141,21 @@ while True:
             player_busts(dealer_hand,chips)
             break
 
-    while dealer_hand.value < player_hand.value:
-        hit(shuffled_deck,dealer_hand)
+    if player_hand.value <= 21:
+        while dealer_hand.value < player_hand.value:
+            hit(shuffled_deck,dealer_hand)
     
-    show_all(player_hand,dealer_hand)
+        show_all(player_hand,dealer_hand)
     
-    #winning scenarios
-    if dealer_hand.value > 21:
-        dealer_busts(dealer_hand)
-    elif dealer_hand.value > player_hand.value:
-        dealer_wins(dealer_hand)
-    else:
-        push(player_hand,dealer_hand,chips)
+        #winning scenarios
+        if dealer_hand.value > 21:
+            dealer_busts(dealer_hand)
+        elif dealer_hand.value > player_hand.value:
+            dealer_wins(dealer_hand)
+        else:
+            push(player_hand,dealer_hand,chips)
 
-    print(f'You have {chips} chips')
+    print(f'You have {chips.total} chips')
 
     new_game = input('would you like to play another game?')
     if new_game[0].lower == 'y':
